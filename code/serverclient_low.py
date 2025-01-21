@@ -75,8 +75,18 @@ def parameter_last_sum(tensor_sum):
             for ij,j in enumerate(layer_lens):
                 if i-(max_lens-j)>=0:
                     tensor_sum[ij][lij.format(layer=i-(max_lens-j))]=sum(avg_para)/len(avg_para)
-            
-
+def parameter_hetlora(tensor_sum):
+    for i in tensor_sum[0]:
+        if "lora_B" in i:
+            max_lorar=max([tensor_sum[j][i].shape[1] for j in range(len(tensor_sum))])
+            avg_para=sum([torch.nn.functional.pad(tensor_sum[j][i],(0,max_lorar-tensor_sum[j][i].shape[1])) for j in range(len(tensor_sum))])/len(tensor_sum)
+            for j in range(len(tensor_sum)):
+                tensor_sum[j][i]=avg_para@torch.pca_lowrank(avg_para.float(),tensor_sum[j][i].shape[1])[2].half()
+        elif "lora_A" in i:
+            max_lorar=max([tensor_sum[j][i].shape[0] for j in range(len(tensor_sum))])
+            avg_para=sum([torch.nn.functional.pad(tensor_sum[j][i].t(), (0,max_lorar-tensor_sum[j][i].shape[0])) for j in range(len(tensor_sum))])/len(tensor_sum)
+            for j in range(len(tensor_sum)):
+                tensor_sum[j][i]=(avg_para@torch.pca_lowrank(avg_para.float(),tensor_sum[j][i].shape[0])[2].half()).t()
 
 
 
