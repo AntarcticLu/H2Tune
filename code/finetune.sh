@@ -26,7 +26,7 @@ torchrun \
 --model_name_or_path ${model_path} \
 --data_path ${dataset} \
 --fp16 True \
---output_dir ../autodl-tmp/llama_${port} \
+--output_dir ./savedir/llm_${port} \
 --num_train_epochs ${epoch} \
 --per_device_train_batch_size ${batch} \
 --gradient_accumulation_steps 8 \
