@@ -11,12 +11,9 @@ models=['','gemma2b','llama3b','smollm1_7b']
 # models=['','blank_fill','choice','program']
 
 layers=[1,18,28,24]
-# layers=[1,28,28,28]
 max_layer=max(layers[1:client_num+1])
 epochs = [1 ,1 ,1 ,1 ]
-# epochs = [1 ,1]
 batchs= [1, 2, 2, 2]
-# lora_rs=[0, 16, 64, 128]
 learn_rates=[0,2e-4,2e-4,2e-4]
 lora_rs=[0, 16, 64, 128]
 max_r=max(lora_rs[1:client_num+1])
@@ -27,12 +24,6 @@ test_path = ["./data/"+dataset+"_testset_500.json" for dataset in datasets]
 # test_path = ["./data/"+dataset+"_10.json" for dataset in datasets]
 
 
-
-# datasets = ['','choice','choice','program']
-# epochs = [1 ,1 ,1 ,3 ]
-# lora_rs=[0, 64, 32, 64]
-# train_path = ["./data/math/"+dataset+"_10.json" for dataset in datasets]
-# test_path = ["./data/math/"+dataset+"_10.json" for dataset in datasets]
 
 finetune_sh_train=["sh ./code/finetune.sh "+str(p)+" "+train_path[p-ports[0]]+" "+models_path[p-ports[0]]+" {round} "+str(epochs[p-ports[0]])+" "+str(batchs[p-ports[0]])+" "+str(lora_rs[p-ports[0]])+" "+str(max_r)+" "+str(max_layer)+" "+str(strategy)+" "+str(learn_rates[p-ports[0]]) for p in ports]
 finetune_sh_eval=["python ./code/eval.py --port "+str(p)+" --round {round} --strategy "+str(strategy) for p in ports]
