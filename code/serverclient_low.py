@@ -42,7 +42,7 @@ def parameter_recv(client_socket):
     tensor_received = pickle.loads(tensor_bytes)
     return tensor_received,tensor_size,end_time-start_time
 def extract_para(port):
-    param_dict=torch.load('../autodl-tmp/temp_para_old_'+str(port))
+    param_dict=torch.load('./savedir/temp_para_old_'+str(port))
     if strategy==1:
         return {ke:param_dict[ke] for ke in param_dict if 'allset' in ke}
     elif strategy==0:
@@ -156,13 +156,13 @@ class SCThread(threading.Thread):
                 end_time=time.time()
                 txtlog("[round:"+str(r)+"] client :"+str(p)+" train_time: "+str(end_time-start_time)+"s")
                 os.system(finetune_sh_eval[p-ports[0]].format(round=r))
-                os.system("rm -rf ../autodl-tmp/llama_"+str(p)+"/*")
+                os.system("rm -rf ./savedir/llm_"+str(p)+"/*")
                 tensor_to_send=extract_para(p)
                 parameter_size,spent_time= parameter_send(tensor_to_send, self.client_socket[p])
                 # txtlog("[round:"+str(r)+"] client : send; size: "+str(parameter_size)+"bytes, time: "+str(spent_time)+"s")
             for p in self.port:
                 tensor_received,tensor_size,spent_time= parameter_recv(self.client_socket[p])
-                torch.save(tensor_received, "../autodl-tmp/temp_para_new_"+str(p))
+                torch.save(tensor_received, "./savedir/temp_para_new_"+str(p))
                 # txtlog("[round:"+str(r+1)+"] client : receive; size: "+str(tensor_size)+"bytes, time: "+str(spent_time)+"s")
         for p in self.port:
             start_time=time.time()
@@ -170,7 +170,7 @@ class SCThread(threading.Thread):
             end_time=time.time()
             txtlog("[round:"+str(r+1)+"] client :"+str(p)+" train_time: "+str(end_time-start_time)+"s")
             os.system(finetune_sh_eval[p-ports[0]].format(round=r+1))
-            os.system("rm -rf ../autodl-tmp/llama_"+str(p)+"/*")
+            os.system("rm -rf ./savedir/llm_"+str(p)+"/*")
             self.client_socket[p].close
 
 server_thread=SCThread(ports[0])
