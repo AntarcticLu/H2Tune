@@ -1,13 +1,13 @@
 server_port = 8080
 client_num = 3
-round = 4
+round = 5
 strategy = 1
 
 ports = [29500+i for i in range(client_num+1)]
 # datasets = ['','blank_fill','choice','program','ssc','spc','nli']
-datasets=['','program','program','program']
+datasets=['','blank_fill','choice','program']
 
-models=['','gemma2b','llama3b','smollm1_7b']
+models=['','gemma','llama','smollm']
 # models=['','blank_fill','choice','program']
 
 layers=[1,18,28,24]
@@ -18,7 +18,7 @@ learn_rates=[0,2e-4,2e-4,2e-4]
 lora_rs=[0, 16, 64, 128]
 max_r=max(lora_rs[1:client_num+1])
 
-models_path= ["../autodl-tmp/"+model for model in models]
+models_path= ["./models/"+model for model in models]
 train_path = ["./data/"+dataset+"_trainset_5k.json" for dataset in datasets]
 test_path = ["./data/"+dataset+"_testset_500.json" for dataset in datasets]
 # test_path = ["./data/"+dataset+"_10.json" for dataset in datasets]
