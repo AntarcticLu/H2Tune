@@ -79,7 +79,7 @@ def eval_model(args):
     prefix = '\n' + 'Problem:\n{qestion}\nSolution:\n'
     tmp += '\n' + 'Problem:\n{qestion}\nSolution:\n{answer}\n'.format_map(few_shot)
     input_strs=[tmp+prefix.format(qestion=q) for q in questions]
-    outputs = llm.generate(input_strs, sampling_params, lora_request=LoRARequest(str(args.port), 1, '../autodl-tmp/llama_'+str(args.port)))
+    outputs = llm.generate(input_strs, sampling_params, lora_request=LoRARequest(str(args.port), 1, './savedir/llm_'+str(args.port)))
     outputs = [output.outputs[0].text for output in outputs]
     correct, wrong = 0, 0
     for output, groundtruth, task in zip(outputs, groundtruths, tasks):
