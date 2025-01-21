@@ -287,15 +287,15 @@ def train():
     if training_args.round>0:
         loadlp={}
         if training_args.strategy==1:
-            localpara=torch.load('../autodl-tmp/temp_para_old_'+training_args.output_dir[-5:])
+            localpara=torch.load('./savedir/temp_para_old_'+training_args.output_dir[-5:])
             loadlp.update({k:localpara[k] for k in localpara if 'lora_A' in k})
             loadlp.update({k:localpara[k] for k in localpara if 'lora_B' in k})
             loadlp.update({k:localpara[k] for k in localpara if 'lora_mT' in k})
             loadlp.update({'base_model.layer_mask':localpara['layer_proj']})
-            loadlp.update({'base_model.allset':torch.load('../autodl-tmp/temp_para_new_'+training_args.output_dir[-5:])['allset'].to(model.allset.device)})
+            loadlp.update({'base_model.allset':torch.load('./savedir/temp_para_new_'+training_args.output_dir[-5:])['allset'].to(model.allset.device)})
         elif training_args.strategy==0:
-            loadlp=torch.load('../autodl-tmp/temp_para_new_'+training_args.output_dir[-5:])
-        # model.load_state_dict(torch.load('../autodl-tmp/temp_para_new_'+training_args.output_dir[-5:]),strict=False)
+            loadlp=torch.load('./savedir/temp_para_new_'+training_args.output_dir[-5:])
+        # model.load_state_dict(torch.load('./savedir/temp_para_new_'+training_args.output_dir[-5:]),strict=False)
         model.load_state_dict(loadlp,strict=False)
 
     # print(model.model.model.layers[0].self_attn.q_proj.lora_lT.default.weight,"aa")
@@ -371,7 +371,7 @@ def train():
         
 
     if trainer.args.should_save and trainer.args.local_rank == 0:
-        torch.save(state_dict,"../autodl-tmp/temp_para_old_"+training_args.output_dir[-5:])
+        torch.save(state_dict,"./savedir/temp_para_old_"+training_args.output_dir[-5:])
         trainer.save_model(training_args.output_dir)
 
 
