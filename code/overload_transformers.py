@@ -55,7 +55,7 @@ def compute_loss(self, model, inputs, return_outputs=False, pred_value=None):
         if self.args.forzen_state==1:
             new_loss=[]
             kl_loss = torch.nn.KLDivLoss(reduction='batchmean')
-            old_T=torch.load('../autodl-tmp/temp_para_old_'+str(self.args.output_dir[-5:]))
+            old_T=torch.load('./savedir/temp_para_old_'+str(self.args.output_dir[-5:]))
             old_T={ke:old_T[ke] for ke in old_T if 'lora_T' in ke}
             new_T={k:p for k,p in model.named_parameters() if 'lora_T' in k}
             for k in old_T:
